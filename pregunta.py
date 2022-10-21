@@ -10,52 +10,33 @@ import pandas as pd
 
 
 def clean_data():
-
+    #leer datos
     df = pd.read_csv("solicitudes_credito.csv", sep=";")
-    #print(len(df))
+    #borar filas con valores faltantes
     df.dropna(inplace=True)
     #sexo
-    df["sexo"] = df["sexo"].apply(lambda x: str(x).lower())
-    # print(df["sexo"].unique())
-
-    #tipo_de_emprendimiento
-    df["tipo_de_emprendimiento"] = df["tipo_de_emprendimiento"].apply(lambda x: str(x).lower())
-    #print(df["tipo_de_emprendimiento"].unique())
-    #idea_negocio
-    df["idea_negocio"] = df["idea_negocio"].apply(lambda x: str(x).lower().replace("-"," ").replace("_"," ").strip())
-    #print(len(df["idea_negocio"].unique()))
-    #115
-    #99
-    #75
-    #barrio
-    df["barrio"] = df["barrio"].apply(lambda x: str(x).lower().replace("_"," ").replace("¿","ñ").replace("-"," ").strip().replace("20","veinte"))
-    print(len(df["barrio"].unique()))
-    #415
-    #281
-    #255
-    #221 xxx 234
-
-    #estrato
-    #df["estrato"] = df["estrato"]
-    print(len(df["estrato"].unique()))
-
-    #comuna_ciudadano
-    df["comuna_ciudadano"] = df["comuna_ciudadano"].apply(lambda x: int(x))
-    print(len(df["comuna_ciudadano"].unique()))
-
-    #fecha_de_beneficio
-    df["fecha_de_beneficio"] = df["fecha_de_beneficio"]
-    print((df["fecha_de_beneficio"].unique()))
-
-
+    df["sexo"] = df["sexo"].apply(lambda x: str(x).lower().strip())
+    # tipo_de_emprendimiento
+    df["tipo_de_emprendimiento"] = df["tipo_de_emprendimiento"].apply(lambda x: str(x).lower().strip())
+    # idea_negocio
+    df["idea_negocio"] = df["idea_negocio"].apply(lambda x: str(x).lower().replace("-", " ").replace("_", " ").strip())
+    # barrio
+    df["barrio"] = df["barrio"].apply(lambda x: str(x).lower().replace("_"," ").replace("-"," "))##revisar
+    #estrato no necesita cambios
+    #comuna no nececita cambios
+    # fecha_de_beneficio
+    df["fecha_de_beneficio"] = pd.to_datetime(df["fecha_de_beneficio"],dayfirst=True)
+    # monto del credito
+    df["monto_del_credito"] = df["monto_del_credito"].apply(lambda x: str(x).strip("$").strip().replace(",", "").replace(".00", ""))
+    # print((len(df["monto_del_credito"].unique())))
+    # línea_credito
+    df["línea_credito"] = df["línea_credito"].apply(lambda x: str(x).lower().replace("-", " ").replace("_", " ").strip())
+    #print("linea credito",(len(df["línea_credito"].unique())))
+    #eliminar duplicados y faltantes
+    df.drop(['Unnamed: 0'], axis=1,inplace=True)
     df.drop_duplicates(inplace=True)
-    #
-    # Inserte su código aquí
-    #print(len(df))
+    df.dropna(inplace=True)
 
-
-    #print(df["sexo"].unique())
 
     return df
-(clean_data())
-#11145
+clean_data()
